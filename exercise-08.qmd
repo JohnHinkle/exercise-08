@@ -1,0 +1,63 @@
+---
+title: "exercise-08"
+author: "John Hinkle"
+format: html
+self-contained: true
+editor: visual
+---
+
+## Step 1a: Load data
+
+```{r}
+library(tidyverse)
+d <- read_csv("https://raw.githubusercontent.com/difiore/ada-datasets/main/Street_et_al_2017.csv")
+```
+
+## Step 1b: Generate summary statistics
+
+```{r}
+library(skimr)
+skim(d) # generate summary statistics
+```
+
+## Step 2
+
+```{r}
+
+```
+
+## Step 3
+
+```{r}
+
+```
+
+## Step 4
+
+```{r}
+
+```
+
+## Step 5
+
+```{r}
+
+```
+
+## Step 6
+
+```{r}
+
+```
+
+## Step 7
+
+```{r}
+
+```
+
+## Step 8
+
+```{r}
+
+```
