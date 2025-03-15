@@ -23,25 +23,55 @@ skim(d) # generate summary statistics
 ## Step 2
 
 ```{r}
+library(ggplot2)
+p1 <- ggplot(d, aes(x=Group_size, y=ECV)) +
+  geom_point()
+p2 <- ggplot(d, aes(x=Longevity, y=ECV)) +
+  geom_point()
+p3 <- ggplot(d, aes(x=Weaning, y=ECV)) +
+  geom_point()
+p4 <- ggplot(d, aes(x=Repro_lifespan, y=ECV)) +
+  geom_point()
 
+library(patchwork)
+(p1 | p2)/ (p3 | p4) + plot_annotation(tag_levels = "A")
 ```
 
 ## Step 3
 
 ```{r}
+x <- d$Group_size
+y <- d$ECV
 
+complete_data <- complete.cases(x,y)
+
+x <- x[complete_data]
+y <- y[complete_data]
+
+print(beta1 <- cov(x, y) / var(x)) # slope
+print(beta0 <- mean(y) - beta1 * mean(x)) # y-intercept
 ```
 
 ## Step 4
 
 ```{r}
-
+m <- lm(ECV~Group_size, data=d)
+summary(m)
 ```
 
 ## Step 5
 
 ```{r}
+c <- filter(d, Taxonomic_group == "Catarrhini")
+p <- filter(d, Taxonomic_group == "Platyrrhini")
+s <- filter(d, Taxonomic_group == "Strepsirhini")
 
+mc <- lm(ECV~Group_size, data=c)
+summary(mc)
+mp <- lm(ECV~Group_size, data=p)
+summary(mp)
+ms <- lm(ECV~Group_size, data=s)
+summary(ms)
 ```
 
 ## Step 6
