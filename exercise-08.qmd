@@ -37,7 +37,7 @@ library(patchwork)
 (p1 | p2)/ (p3 | p4) + plot_annotation(tag_levels = "I")
 ```
 
-## Step 3: Manually derive beta coefficents for brain size as a function of social group size
+## Step 3: Manually derive regression coefficients for brain size as a function of social group size
 
 ```{r}
 x <- d$Group_size
@@ -48,20 +48,28 @@ complete_data <- complete.cases(x,y)
 x <- x[complete_data]
 y <- y[complete_data]
 
-(beta1 <- cov(x, y) / var(x)) # slope
+# Calculate covariance manually
+x_dev <- x - mean(x)
+y_dev <- y - mean(y)
+covariance <- sum(x_dev*y_dev) / (length(x)-1)
+
+# Calculate variance manually 
+variance <- sum((x-mean(x))^2) / (length(x)-1)
+
+(beta1 <- covariance / variance) # slope
 (beta0 <- mean(y) - beta1 * mean(x)) # y-intercept
 ```
 
-## Step 4: Use 'lm()' to get beta coefficents
+## Step 4: Use 'lm()' to get regression coefficients
 
 The beta coefficents using the 'lm()' function as the same as those manually calculated in Step 3.
 
 ```{r}
 m <- lm(ECV~Group_size, data=d)
-summary(m)
+m$coefficients
 ```
 
-## Step 5:
+## Step 5: Calculate the regression coefficients for the three major primate radiations
 
 ```{r}
 catarrhini <- filter(d, Taxonomic_group == "Catarrhini")
@@ -69,28 +77,32 @@ platyrrhini <- filter(d, Taxonomic_group == "Platyrrhini")
 strepsirhini <- filter(d, Taxonomic_group == "Strepsirhini")
 
 m_catarrhini <- lm(ECV~Group_size, data=catarrhini)
-summary(m_catarrhini)
+m_catarrhini$coefficients
 m_platyrrhini <- lm(ECV~Group_size, data=platyrrhini)
-summary(m_platyrrhini)
+m_platyrrhini$coefficients
 m_strepsirhini <- lm(ECV~Group_size, data=strepsirhini)
-summary(m_strepsirhini)
+m_strepsirhini$coefficients
 ```
 
-## Step 6:
+## Step 6: Calculate standard error, p-value, and 95% confidence interval for the slope coefficent
 
 ```{r}
 library(broom)
 tidy_m <- broom::tidy(m)
 
-(std_error <- tidy_m |>
+std_error <- tidy_m |>
   filter(term == "Group_size") |>
-  pull(std.error))
+  pull(std.error)
 
-(p_value <- tidy_m |>
+p_value <- tidy_m |>
   filter(term == "Group_size") |>
-  pull(p.value))
+  pull(p.value)
 
-(CI <- confint(m, level = 0.95)[2,]) # 95% CI
+CI <- confint(m, level = 0.95)[2,]
+
+paste("The standard error is:", std_error)
+paste("p =", p_value)
+paste("The 95% CI is:", paste(CI, collapse = ", "))
 ```
 
 ## Step 7a
@@ -137,18 +149,25 @@ visualize(perm) + shade_p_value(obs_stat = obs_slope, direction = "two_sided")
 
 library(infer)
 
-boot.slope <- d |>
-  specify(ECV~Group_size) |>
+# Bootstrapping
+boot.slope <- specify(d, ECV~Group_size) |>
   generate(reps = 1000, type = "bootstrap") |>
   calculate(stat = "slope")
 
-quantile(probs = c(0.025, 0.975), boot.slope$stat)
+boot_vector <- boot.slope$stat
 
+# Theoretical CI function
 CI <- function(x, level = 0.95) {
     alpha <- 1 - level
     ci <- mean(x) + c(-1, 1) * qnorm(1 - (alpha/2)) * sqrt(var(x)/length(x))
-    return(ci)
+    print(ci)
 }
+```
 
-print(CI(boot.slope$stat))
+```{r}
+# Quantile Method 95% CI
+quantile(probs = c(0.025, 0.975), boot_vector)
+
+# Theoretical Method 95% CI
+CI(boot_vector) 
 ```
