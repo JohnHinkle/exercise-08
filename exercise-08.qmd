@@ -40,13 +40,13 @@ library(patchwork)
 ## Step 3: Manually derive regression coefficients for brain size as a function of social group size
 
 ```{r}
-x <- d$Group_size
-y <- d$ECV
+group_size <- d$Group_size
+brain_size <- d$ECV
 
-complete_data <- complete.cases(x,y)
+complete_data <- complete.cases(group_size, brain_size)
 
-x <- x[complete_data]
-y <- y[complete_data]
+x <- group_size[complete_data]
+y <- brain_size[complete_data]
 
 # Calculate covariance manually
 x_dev <- x - mean(x)
@@ -83,14 +83,21 @@ m_platyrrhini$coefficients
 m_strepsirhini <- lm(ECV~Group_size, data=strepsirhini)
 m_strepsirhini$coefficients
 ```
-## Step 6a: Calculate standard error, p-value, and 95% confidence interval for the slope coefficent
+
+## Step 6a: Calculate standard error, p-value, and 95% confidence interval for the slope coefficient
 
 ```{r}
 
+# Standard error
+MSE <- sum(m$residuals^2) / (length(x) - 2)
+SSX <- sum((x-mean(x))^2)
+manual_std_error <- sqrt(MSE / SSX)
+manual_std_error
 
+# 
 ```
 
-## Step 6b: Calculate standard error, p-value, and 95% confidence interval for the slope coefficent
+## Step 6b: Calculate standard error, p-value, and 95% confidence interval for the slope coefficient
 
 ```{r}
 library(broom)
