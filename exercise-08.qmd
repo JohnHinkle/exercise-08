@@ -83,8 +83,14 @@ m_platyrrhini$coefficients
 m_strepsirhini <- lm(ECV~Group_size, data=strepsirhini)
 m_strepsirhini$coefficients
 ```
+## Step 6a: Calculate standard error, p-value, and 95% confidence interval for the slope coefficent
 
-## Step 6: Calculate standard error, p-value, and 95% confidence interval for the slope coefficent
+```{r}
+
+
+```
+
+## Step 6b: Calculate standard error, p-value, and 95% confidence interval for the slope coefficent
 
 ```{r}
 library(broom)
