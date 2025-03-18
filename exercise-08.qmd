@@ -71,7 +71,7 @@ m$coefficients
 
 ## Step 5: Calculate the regression coefficients for the three major primate radiations
 
-The regression coefficients are different between the three groups.
+By looking at them, the regression coefficients are different between the three groups.
 
 ```{r}
 catarrhini <- filter(d, Taxonomic_group == "Catarrhini")
@@ -137,41 +137,36 @@ paste("p =", p_value)
 
 ## Step 7: Permutation approach to generate a null sampling distribution for the slope coefficient
 
-**What is it that we are permuting?** The slope coefficient
+**What is it that we are permuting?** The slope coefficient, so that we can get a permutation distribution of the slope coefficient when we have broken the relationship between brain size and group size.
 
 **What is the p value associated with the original slope coefficient?** p = 7.25943489958251e-11
 
 ```{r}
-library(infer)
+library(mosaic)
+n_perm <- 1000
 
-alpha <- 0.05
-confidence_level <- 1 - alpha
-p_lower <- alpha/2
-p_upper <- 1 - (alpha/2)
-degrees_of_freedom <- nrow(d)- 2
-critical_value <- qt(p_upper, df = degrees_of_freedom)
-
+# Original or "observed" slope coefficent
 obs_slope <- tidy_m |>
-  filter(term == "Group_size") |>
+  filter(term == "weight") |>
   pull(estimate)
 
-n_perm <- 1000
-perm <- d |>
-  specify(ECV~Group_size) |>
-  hypothesize(null = "independence") |>
-  generate(reps = n_perm, type = "permute") |>
-  calculate(stat = "slope")
-```
+perm <- do(n_perm) * {
+  d_new <- d
+  d_new$Group_size<- sample(d_new$Group_size)
+  m <- lm(data = d_new, ECV~Group_size)
+  broom::tidy(m) |>
+    filter(term == "Group_size") |>
+    pull(estimate)
+}
 
-```{r}
-perm_p_value <- sum(perm$stat > abs(obs_slope) | perm$stat < -1 * abs(obs_slope)) / n_perm
+# Calculate p-value
+perm_p_value <- sum(perm$result > abs(obs_slope) | perm$result < -1 * abs(obs_slope))/n_perm
 paste("p = ", perm_p_value)
 ```
 
 ## Step 8: Use bootstrapping to generate a 95% CI for the estimate of the slope coefficient using both the quantile method and the theory-based method
 
 ```{r}
-
 library(infer)
 
 # Bootstrapping
