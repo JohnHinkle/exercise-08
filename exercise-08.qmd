@@ -71,6 +71,8 @@ m$coefficients
 
 ## Step 5: Calculate the regression coefficients for the three major primate radiations
 
+The regression coefficients are different between the three groups.
+
 ```{r}
 catarrhini <- filter(d, Taxonomic_group == "Catarrhini")
 platyrrhini <- filter(d, Taxonomic_group == "Platyrrhini")
@@ -188,6 +190,7 @@ CI <- function(x, level = 0.95) {
 ```
 
 Both confidence intervals suggest that the slope is different from zero as neither confidence interval includes 0.
+
 ```{r}
 # Quantile Method 95% CI
 quantile(probs = c(0.025, 0.975), boot_vector)

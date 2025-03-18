@@ -3493,6 +3493,7 @@ dbl (11): Social_learning, Research_effort, ECV, Group_size, Gestation, Wean...
 </section>
 <section id="step-5-calculate-the-regression-coefficients-for-the-three-major-primate-radiations" class="level2">
 <h2 class="anchored" data-anchor-id="step-5-calculate-the-regression-coefficients-for-the-three-major-primate-radiations">Step 5: Calculate the regression coefficients for the three major primate radiations</h2>
+<p>The regression coefficients are different between the three groups.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>catarrhini <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, Taxonomic_group <span class="sc">==</span> <span class="st">&quot;Catarrhini&quot;</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>platyrrhini <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, Taxonomic_group <span class="sc">==</span> <span class="st">&quot;Platyrrhini&quot;</span>)</span>
@@ -3648,12 +3649,12 @@ dbl (11): Social_learning, Research_effort, ECV, Group_size, Gestation, Wean...
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), boot_vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-1.500574 3.298814 </code></pre>
+1.451264 3.348365 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Theoretical Method 95% CI</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">CI</span>(boot_vector) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.41005 2.46764</code></pre>
+<pre><code>[1] 2.376970 2.437589</code></pre>
 </div>
 </div>
 </section>
