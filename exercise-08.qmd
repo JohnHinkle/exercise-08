@@ -87,38 +87,57 @@ m_strepsirhini$coefficients
 ## Step 6a: Calculate standard error, p-value, and 95% confidence interval for the slope coefficient
 
 ```{r}
-
-# Standard error
+# Standard error of slope coefficent
 MSE <- sum(m$residuals^2) / (length(x) - 2)
 SSX <- sum((x-mean(x))^2)
 manual_std_error <- sqrt(MSE / SSX)
-manual_std_error
 
-# 
+# 95% confidence interval
+slope <- as.numeric(m$coefficients[2])
+t_value <- qt(0.975, df = length(x) - 2)
+CI_lower <- slope  - t_value * manual_std_error
+CI_upper <- slope  + t_value * manual_std_error
+
+# p value
+t_statistic <- slope / manual_std_error
+manual_p_value <- 2 * (1 - pt(abs(t_statistic), df = length(x) - 2))
+
+paste("The standard error is:", manual_std_error)
+paste("The 95% CI is:", paste(CI_lower, CI_upper))
+paste("p =", manual_p_value)
 ```
 
 ## Step 6b: Calculate standard error, p-value, and 95% confidence interval for the slope coefficient
 
 ```{r}
 library(broom)
+
+# Getting model results into a table
 tidy_m <- broom::tidy(m)
 
+# Pulling standard error
 std_error <- tidy_m |>
   filter(term == "Group_size") |>
   pull(std.error)
 
+# Pulling 95% confidence interval
+CI <- confint(m, level = 0.95)[2,]
+
+# Pulling p-value
 p_value <- tidy_m |>
   filter(term == "Group_size") |>
   pull(p.value)
 
-CI <- confint(m, level = 0.95)[2,]
-
 paste("The standard error is:", std_error)
-paste("p =", p_value)
 paste("The 95% CI is:", paste(CI, collapse = ", "))
+paste("p =", p_value)
 ```
 
-## Step 7a
+## Step 7: Permutation approach to generate a null sampling distribution for the slope coefficient
+
+**What is it that we are permuting?** The slope coefficient
+
+**What is the p value associated with the original slope coefficient?** p = 7.25943489958251e-11
 
 ```{r}
 library(infer)
@@ -127,36 +146,27 @@ alpha <- 0.05
 confidence_level <- 1 - alpha
 p_lower <- alpha/2
 p_upper <- 1 - (alpha/2)
-degrees_of_freedom <- nrow(d) - 2
+degrees_of_freedom <- nrow(d)- 2
 critical_value <- qt(p_upper, df = degrees_of_freedom)
 
 obs_slope <- tidy_m |>
   filter(term == "Group_size") |>
   pull(estimate)
 
-nperm <- 1000
+n_perm <- 1000
 perm <- d |>
-  # specify model
   specify(ECV~Group_size) |>
-  # use a null hypothesis of independence
   hypothesize(null = "independence") |>
-  # generate permutation replicates
-  generate(reps = nperm, type = "permute") |>
-  # calculate the slope statistic
+  generate(reps = n_perm, type = "permute") |>
   calculate(stat = "slope")
-# calculate se as sd of permutation distribution
-perm.se <- sd(perm$stat)
-# visualize
-visualize(perm) + shade_p_value(obs_stat = obs_slope, direction = "two_sided")
 ```
-
-## Step 7b
 
 ```{r}
-
+perm_p_value <- sum(perm$stat > abs(obs_slope) | perm$stat < -1 * abs(obs_slope)) / n_perm
+paste("p = ", perm_p_value)
 ```
 
-## Step 8
+## Step 8: Use bootstrapping to generate a 95% CI for the estimate of the slope coefficient using both the quantile method and the theory-based method
 
 ```{r}
 
@@ -177,6 +187,7 @@ CI <- function(x, level = 0.95) {
 }
 ```
 
+Both confidence intervals suggest that the slope is different from zero as neither confidence interval includes 0.
 ```{r}
 # Quantile Method 95% CI
 quantile(probs = c(0.025, 0.975), boot_vector)
