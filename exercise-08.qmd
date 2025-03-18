@@ -11,6 +11,7 @@ editor: visual
 ```{r}
 library(tidyverse)
 d <- read_csv("https://raw.githubusercontent.com/difiore/ada-datasets/main/Street_et_al_2017.csv")
+set.seed(42)
 ```
 
 ## Step 1b: Generate summary statistics
