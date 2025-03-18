@@ -3588,7 +3588,7 @@ dbl (11): Social_learning, Research_effort, ECV, Group_size, Gestation, Wean...
 </section>
 <section id="step-7-permutation-approach-to-generate-a-null-sampling-distribution-for-the-slope-coefficient" class="level2">
 <h2 class="anchored" data-anchor-id="step-7-permutation-approach-to-generate-a-null-sampling-distribution-for-the-slope-coefficient">Step 7: Permutation approach to generate a null sampling distribution for the slope coefficient</h2>
-<p><strong>What is it that we are permuting?</strong> The slope coefficient, so that we can get a permutation distribution of the slope coefficient when we have broken the relationship between brain size and group size.</p>
+<p><strong>What is it that we are permuting?</strong> The slope coefficient, so that we can get a permutation distribution of the slope coefficient were we have broken the relationship between brain size and group size.</p>
 <p><strong>What is the p value associated with the original slope coefficient?</strong> p = 7.25943489958251e-11</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3701,12 +3701,12 @@ Attaching package: &#39;infer&#39;</code></pre>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), boot_vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-1.510539 3.242165 </code></pre>
+1.439723 3.281456 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Theoretical Method 95% CI</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">CI</span>(boot_vector) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.396155 2.452439</code></pre>
+<pre><code>[1] 2.409792 2.468117</code></pre>
 </div>
 </div>
 </section>

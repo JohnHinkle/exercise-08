@@ -137,7 +137,7 @@ paste("p =", p_value)
 
 ## Step 7: Permutation approach to generate a null sampling distribution for the slope coefficient
 
-**What is it that we are permuting?** The slope coefficient, so that we can get a permutation distribution of the slope coefficient when we have broken the relationship between brain size and group size.
+**What is it that we are permuting?** The slope coefficient, so that we can get a permutation distribution of the slope coefficient were we have broken the relationship between brain size and group size.
 
 **What is the p value associated with the original slope coefficient?** p = 7.25943489958251e-11
 
